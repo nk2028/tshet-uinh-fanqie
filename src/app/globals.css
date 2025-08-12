@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@import url('https://cdn.jsdelivr.net/gh/ayaka14732/syyon-vencie@6b08e67/charissil/CharisSIL.css');
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
@@ -22,5 +24,43 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Source Han Sans C', 'Source Han Sans K', 'Noto Sans CJK KR', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Source Han Sans',
+    'Noto Sans CJK JP', 'Source Han Sans TC', 'Noto Sans CJK TC', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Jomolhari', 'HanaMin',
+    'CharisSILW', sans-serif;
+  /* TODO: confirm font name */
+  font-language-override: 'KOR';
+}
+
+.fanqie-process-area h3 {
+  margin: 1rem 0;
+}
+
+.fanqie-process-area p {
+  margin: 0;
+}
+
+.fanqie-process-area img {
+  margin: 0.5rem 0;
+}
+
+.fanqie-bg-black-75 {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  font-family: 'Source Han Serif C', 'Source Han Serif K', 'Noto Serif CJK KR', 'Source Han Serif SC', 'Noto Serif CJK SC',
+    'Source Han Serif', 'Noto Serif CJK JP', 'Source Han Serif TC', 'Noto Serif CJK TC', 'Noto Serif KR', 'Noto Serif SC', 'Noto Serif TC',
+    'Jomolhari', 'HanaMin', 'CharisSILW', serif;
+  font-language-override: 'KOR';
+}
+
+:lang(zh-Latn-fonipa) {
+  font-family: 'CharisSILW', serif;
+  font-language-override: 'KOR';
 }

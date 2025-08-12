@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  basePath: '/tshet-uinh-fanqie',
+  assetPrefix: '/tshet-uinh-fanqie/',
+  trailingSlash: true,
 };
 
 export default nextConfig;
