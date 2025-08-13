@@ -47,6 +47,12 @@ const FanqieCalculator: React.FC = () => {
   const 上字選單Ref = useRef<HTMLDivElement>(null);
   const 下字選單Ref = useRef<HTMLDivElement>(null);
 
+  const fnNameMap = new Map<(當前音韻地位: 音韻地位) => string, string>([
+    [推導普通話, '普通話'],
+    [推導廣州話, '廣州話'],
+    [推導上海話, '上海話'],
+  ]);
+
   // 處理上字輸入
   const handle上字Change = (value: string) => {
     set上字(value);
@@ -251,9 +257,9 @@ const FanqieCalculator: React.FC = () => {
               <input
                 type="button"
                 key={index}
-                value={fn.name.replace('推導', '')}
+                value={fnNameMap.get(fn)}
                 onClick={() => set推導現代音(() => fn)}
-                className={`px-2 py-1 rounded-lg ${推導現代音.name === fn.name ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
+                className={`px-2 py-1 rounded-lg ${推導現代音 === fn ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
               />
             ))}
           </div>
@@ -269,18 +275,19 @@ const FanqieCalculator: React.FC = () => {
         )}
       </div>
 
-      <footer className="mt-8 text-gray-500 text-sm max-w-3xl">
-        反切計算器由{' '}
-        <a href="https://nk2028.shn.hk/" className="underline" target="_blank">
-          nk2028
-        </a>{' '}
-        項目開發。歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼公開於 GitHub。
+      <footer className="mt-8 max-w-3xl">
+        <p className='text-gray-500 text-sm/6'>
+          反切計算器由{' '}
+          <a href="https://nk2028.shn.hk/" className="underline" target="_blank">
+            nk2028
+          </a>{' '}
+          項目開發。歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼公開於{' '}
+          <a href="https://github.com/nk2028/tshet-uinh-fanqie" className="underline" target="_blank">
+            GitHub
+          </a>
+          。
+        </p>
       </footer>
-      <script
-        defer
-        src="https://static.cloudflareinsights.com/beacon.min.js"
-        data-cf-beacon='{\"token\": \"16ad6c356b37426cb31816318ed5a42d\"}'
-      ></script>
     </div>
   );
 };
