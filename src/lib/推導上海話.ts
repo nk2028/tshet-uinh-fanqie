@@ -505,13 +505,13 @@ const 推導上海話 = (當前音韻地位: 音韻地位): string => {
     const match = 元音Re.exec(音節);
     if (match !== null) {
       if (閉前元音.includes(match[0])) {
-        for (const 聲母 in 顎化分尖團) 音節 = 音節.replace(聲母, 顎化分尖團[聲母]);
+        for (const 聲母 in 顎化分尖團) 音節 = 音節.replace(聲母, 顎化分尖團[聲母 as keyof typeof 顎化分尖團]);
         if (選項.分尖團 !== '分尖團') {
-          for (const 聲母 in 顎化分情琴) 音節 = 音節.replace(聲母, 顎化分情琴[聲母]);
+          for (const 聲母 in 顎化分情琴) 音節 = 音節.replace(聲母, 顎化分情琴[聲母 as keyof typeof 顎化分情琴]);
         }
         if (選項.分尖團 === '區分⟨徐､齊⟩') {
           if (is`從崇常母`) {
-            for (const 聲母 in 顎化弗分尖團) 音節 = 音節.replace(聲母, 顎化弗分尖團[聲母]);
+            for (const 聲母 in 顎化弗分尖團) 音節 = 音節.replace(聲母, 顎化弗分尖團[聲母 as keyof typeof 顎化弗分尖團]);
           }
         }
       }
@@ -520,7 +520,7 @@ const 推導上海話 = (當前音韻地位: 音韻地位): string => {
   }
 
   function 主流層選擇規則(音們: string[]) {
-    const 音們_非主流度們 = [];
+    const 音們_非主流度們: { 音: string; 非主流度: number }[] = [];
     音們.forEach(音 => {
       音們_非主流度們.push({ 音, 非主流度: (音.match(/▽/g) || []).length });
     });
@@ -565,13 +565,13 @@ const 推導上海話 = (當前音韻地位: 音韻地位): string => {
         標調位置 = 音節.indexOf('̩');
       }
       標調位置 += 1;
-      return 音節.slice(0, 標調位置) + 附標標調[聲調] + 音節.slice(標調位置);
+      return 音節.slice(0, 標調位置) + 附標標調[聲調 as keyof typeof 附標標調] + 音節.slice(標調位置);
     } else if (選項.標調方式 === '數字調值') {
-      return 音節 + 數字標調[聲調];
+      return 音節 + 數字標調[聲調 as keyof typeof 數字標調];
     } else if (選項.標調方式 === '折線') {
-      return 音節 + 折線標調[聲調];
+      return 音節 + 折線標調[聲調 as keyof typeof 折線標調];
     } else if (選項.標調方式 === '八調序號') {
-      return 音節 + 序號標調[聲調];
+      return 音節 + 序號標調[聲調 as keyof typeof 序號標調];
     } else {
       return 音節;
     }
@@ -601,9 +601,10 @@ const 推導上海話 = (當前音韻地位: 音韻地位): string => {
     if (選項.文白讀 === '僅白讀') 結果 = finalise(白讀音);
     else if (選項.文白讀 === '僅文讀') 結果 = finalise(文讀音);
     else if (文讀音 === 白讀音) 結果 = finalise(文讀音);
-    else 結果 = finalise(文讀音) + '(文) ' + finalise(白讀音) + '(白)';
+    else 結果 = finalise(文讀音) + '(文) ' + finalise(白讀音) + '(白)'; // 此處將原程式碼的換行改為括號附註，便於頁面展示
   }
 
+  defaultLogger.log(`上海話推導過程暫缺，但推導結果為 ${結果}`);
   return 結果;
 };
 

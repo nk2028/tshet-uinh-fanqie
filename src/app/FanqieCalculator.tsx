@@ -6,11 +6,11 @@ import TshetUinh, { 音韻地位 } from 'tshet-uinh';
 import { 檢索結果 } from 'tshet-uinh/lib/資料';
 
 import { calculateFanqie } from '../lib/反切';
-import { 推導普通話 } from '@/lib/推導普通話';
-import 推導廣州話 from '@/lib/推導廣州話';
-import MarkdownWithImagePreview from './MarkdownWithImagePreview';
-import 推導上海話 from '@/lib/推導上海話';
 import CustomDropdown from './Dropdown';
+import MarkdownWithImagePreview from './MarkdownWithImagePreview';
+import 推導普通話 from '@/lib/推導普通話';
+import 推導廣州話 from '@/lib/推導廣州話';
+import 推導上海話 from '@/lib/推導上海話';
 
 const 預設反切: string[] = [
   '德紅',
@@ -26,8 +26,9 @@ const 預設反切: string[] = [
   '康杜',
   '甫明',
   '子廉',
-  '苦割',
-  '英及',
+  '殊六',
+  '良涉',
+  '蘇合',
 ];
 
 const FanqieCalculator: React.FC = () => {
@@ -125,17 +126,15 @@ const FanqieCalculator: React.FC = () => {
   }, [推導現代音, 上字, 下字, 上字當前選擇, 下字當前選擇]);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
-      {/* 標題 */}
-      <h1 className="text-4xl font-bold mb-8">反切計算器</h1>
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-16">
+      <h1 className="mb-14 text-4xl font-bold">反切計算器</h1>
 
-      {/* 主要內容區域 */}
-      <div className="w-full max-w-4xl">
-        {/* 主要輸入區域 */}
-        <div className="table m-auto items-center justify-center mb-8">
+      <div className="w-full max-w-3xl">
+        {/* 算式 */}
+        <div className="mx-auto mb-10 table items-center justify-center">
           {/* 第一行 */}
-          <div className="table-row items-center space-x-8 text-3xl mono">
-            {/* 左側輸入 */}
+          <div className="table-row items-center space-x-8">
+            {/* 上字 */}
             <div className="table-cell text-center align-center items-center">
               <input
                 type="text"
@@ -147,9 +146,9 @@ const FanqieCalculator: React.FC = () => {
               />
             </div>
 
-            <span className="table-cell px-4 text-gray-400">×</span>
+            <span className="table-cell px-4 text-3xl text-gray-400">×</span>
 
-            {/* 右側輸入 */}
+            {/* 下字 */}
             <div className="table-cell text-center align-center items-center">
               <input
                 type="text"
@@ -161,29 +160,32 @@ const FanqieCalculator: React.FC = () => {
               />
             </div>
 
-            <span className="table-cell px-4 text-gray-400">→</span>
+            <span className="table-cell px-4 text-3xl text-gray-400">→</span>
 
             {/* 結果顯示 */}
             <div className="table-cell text-center align-top items-center">
-              <div className="w-48 h-24 bg-gray-800 border-2 border-gray-600 rounded-lg flex items-center justify-center text-white text-4xl">
+              <div
+                className="w-36 h-24 flex bg-gray-800 border-2 border-gray-600 rounded-lg items-center justify-center text-4xl text-white"
+                lang="zh-Latn-fonipa"
+              >
                 {反切結果.length === 0 ? (
-                  <span className="text-gray-500">_</span>
+                  <></>
                 ) : 反切結果.length === 1 ? (
-                  <span lang="zh-Latn-fonipa">{反切結果[0]}</span>
+                  <>{反切結果[0]}</>
                 ) : (
-                  <div className="text-2xl table">
-                    <span className="text-3xl table-cell align-middle pr-1">{'{'}</span>
-                    <div lang="zh-Latn-fonipa" className="ml-2 text-lg table-cell text-left">
+                  <>
+                    <span className="text-4xl row-span-2 align-middle pr-1">{'{'}</span>
+                    <div className="flex flex-col ml-2 text-lg text-left">
                       {反切結果.map((result, index) => (
-                        <div key={index}>{result}</div>
+                        <span key={index}>{result}</span>
                       ))}
                     </div>
-                  </div>
+                  </>
                 )}
               </div>
             </div>
           </div>
-          <div className="table-row items-center space-x-8 text-3xl mono">
+          <div className="table-row items-center space-x-8">
             <div className="table-cell">
               {/* 左側讀音選擇 */}
               {上字候選.length > 1 && (
@@ -195,7 +197,6 @@ const FanqieCalculator: React.FC = () => {
                   isOpen={上字選單Open}
                   setIsOpen={set上字選單Open}
                   dropdownRef={上字選單Ref}
-                  placeholder="選擇讀音"
                 />
               )}
             </div>
@@ -211,7 +212,6 @@ const FanqieCalculator: React.FC = () => {
                   isOpen={下字選單Open}
                   setIsOpen={set下字選單Open}
                   dropdownRef={下字選單Ref}
-                  placeholder="選擇讀音"
                 />
               )}
             </div>
@@ -219,51 +219,50 @@ const FanqieCalculator: React.FC = () => {
         </div>
 
         {/* 說明文字 */}
-        <div className="text-center text-gray-400 mb-8 text-base/8">
-          <p>輸入兩個漢字進行反切計算，或粘貼兩個字自動分配到左右輸入框</p>
-          {/* 預設反切 */}
+        <div className="my-8 text-center text-gray-400 text-base/8">
+          <p>輸入兩個漢字進行反切計算，或粘貼兩個字自動分配至兩個輸入框</p>
+
           <p className="justify-center">
             或從預設反切中選取
-            {預設反切.map((pair, index) => {
-              const 上字 = pair[0];
-              const 下字 = pair[1];
+            {預設反切.map((反切, index) => {
+              const [上字, 下字] = [...反切];
               return (
-                <button
+                <input
+                  type="button"
                   key={index}
+                  value={反切}
                   onClick={() => {
                     handle上字Change(上字);
                     handle下字Change(下字);
                   }}
                   className="px-2 ml-2 my-1 bg-gray-700 hover:bg-gray-600 rounded"
-                >
-                  {上字 + 下字}
-                </button>
+                />
               );
             })}
           </p>
         </div>
 
-        <div className="bg-gray-900 rounded-lg p-6 max-w-3xl mx-auto">
-          <h3 className="text-xl my-2">選項</h3>
+        <div className="my-8 bg-gray-900 rounded-lg px-6 py-4">
+          <h3 className="text-xl mb-4">選項</h3>
           {/* 現代音選擇 */}
           <div className="flex items-center justify-left space-x-2">
             <div>現代音選擇</div>
             {[推導普通話, 推導廣州話, 推導上海話].map((fn, index) => (
-              <button
+              <input
+                type="button"
                 key={index}
+                value={fn.name.replace('推導', '')}
                 onClick={() => set推導現代音(() => fn)}
                 className={`px-2 py-1 rounded-lg ${推導現代音.name === fn.name ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-              >
-                {fn.name.replace('推導', '')}
-              </button>
+              />
             ))}
           </div>
         </div>
 
         {/* 反切過程顯示 */}
         {反切過程 && (
-          <div className="bg-gray-900 rounded-lg p-6 max-w-3xl mx-auto mt-4">
-            <div className="prose prose-invert max-w-none fanqie-process-area">
+          <div className="bg-gray-900 rounded-lg px-6 pt-2 pb-4">
+            <div className="prose prose-invert fanqie-process-area max-w-full">
               <MarkdownWithImagePreview content={反切過程}></MarkdownWithImagePreview>
             </div>
           </div>
@@ -277,6 +276,11 @@ const FanqieCalculator: React.FC = () => {
         </a>{' '}
         項目開發。歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼公開於 GitHub。
       </footer>
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{\"token\": \"16ad6c356b37426cb31816318ed5a42d\"}'
+      ></script>
     </div>
   );
 };
