@@ -87,13 +87,14 @@ const FanqieCalculator: React.FC = () => {
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, side: 'left' | 'right') => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData('text');
+    const pastedTexts = [...pastedText];
 
-    if (pastedText.length === 2) {
+    if (pastedTexts.length === 2) {
       // 如果粘貼兩個字，分別填入左右
-      handle上字Change(pastedText[0]);
-      handle下字Change(pastedText[1]);
-    } else if (pastedText.length === 1) {
-      // 如果粘貼一個字，填入對應側
+      handle上字Change(pastedTexts[0]);
+      handle下字Change(pastedTexts[1]);
+    } else {
+      // 如果粘貼其他長度，填入對應側
       if (side === 'left') {
         handle上字Change(pastedText);
       } else {
@@ -132,7 +133,7 @@ const FanqieCalculator: React.FC = () => {
   }, [推導現代音, 上字, 下字, 上字當前選擇, 下字當前選擇]);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-16">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
       <h1 className="mb-14 text-4xl font-bold">反切計算器</h1>
 
       <div className="w-full max-w-3xl">
@@ -180,7 +181,7 @@ const FanqieCalculator: React.FC = () => {
                   <>{反切結果[0]}</>
                 ) : (
                   <>
-                    <span className="text-4xl row-span-2 align-middle pr-1">{'{'}</span>
+                    <span className="text-4xl align-middle pr-1">{'{'}</span>
                     <div className="flex flex-col ml-2 text-lg text-left">
                       {反切結果.map((result, index) => (
                         <span key={index}>{result}</span>
@@ -276,7 +277,7 @@ const FanqieCalculator: React.FC = () => {
       </div>
 
       <footer className="mt-8 max-w-3xl">
-        <p className='text-gray-500 text-sm/6'>
+        <p className="text-gray-500 text-sm/6">
           反切計算器由{' '}
           <a href="https://nk2028.shn.hk/" className="underline" target="_blank">
             nk2028
