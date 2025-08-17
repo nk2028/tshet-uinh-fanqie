@@ -4,8 +4,12 @@ import { 音韻地位2所有王三小韻 } from './王三資料';
 
 const 王三頁碼2書影Url = (小韻號: string): string[] => {
   return [
-    `https://cethiunn-1305783649.cos.accelerate.myqcloud.com/王三/蘇教版/thumb/${(Number(小韻號) * 2 - 1).toString().padStart(3, '0')}.png`,
-    `https://cethiunn-1305783649.cos.accelerate.myqcloud.com/王三/蘇教版/thumb/${(Number(小韻號) * 2).toString().padStart(3, '0')}.png`,
+    `https://cethiunn-1305783649.cos.accelerate.myqcloud.com/%E7%8E%8B%E4%B8%89/%E8%98%87%E6%95%99%E7%89%88/thumb/${(Number(小韻號) * 2 - 1)
+      .toString()
+      .padStart(3, '0')}.png`,
+    `https://cethiunn-1305783649.cos.accelerate.myqcloud.com/%E7%8E%8B%E4%B8%89/%E8%98%87%E6%95%99%E7%89%88/thumb/${(Number(小韻號) * 2)
+      .toString()
+      .padStart(3, '0')}.png`,
   ];
 };
 
@@ -53,7 +57,7 @@ const 從王三得出音韻地位 = (字: string, 當前音韻地位: 音韻地�
       const 對應 = 小韻首字 !== 韻鏡位置字頭 ? `，該小韻包含「${韻鏡位置字頭}」字` : '';
       defaultLogger.log(`「${字}」字在《王三》中屬於${小韻首字}小韻${對應}`);
       王三頁碼2書影Url(頁碼).forEach(url => {
-        defaultLogger.log(`![王三（蘇教版）第 ${頁碼} 頁](${url})`);
+        defaultLogger.log(`![王三第 ${頁碼} 頁](${url})`);
       });
       return 當前音韻地位;
     }
@@ -84,7 +88,7 @@ const 解釋字的音韻地位來源 = (字: string, 當前音韻地位: 音韻�
   const 當前韻鏡位置 = 音韻地位2韻鏡位置(當前音韻地位);
   const { 韻鏡位置字頭, 異體字處理 } = 對應韻鏡位置字頭(當前音韻地位);
   if (!韻鏡位置字頭) {
-    defaultLogger.log(`無法使用常規方法獲取「${字}」的音韻地位，使用數據庫中已有的音韻地位「${當前音韻地位.描述}」`);
+    defaultLogger.log(`無法使用常規方法獲取「${字}」的音韻地位，使用資料庫中已有的音韻地位「${當前音韻地位.描述}」`);
     return;
   }
 
@@ -94,7 +98,7 @@ const 解釋字的音韻地位來源 = (字: string, 當前音韻地位: 音韻�
     if (!a) {
       a = 從廣韻得出音韻地位(字, 當前音韻地位, 韻鏡位置字頭);
       if (!a) {
-        defaultLogger.log(`無法使用常規方法獲取「${字}」的音韻地位，使用數據庫中已有的音韻地位「${當前音韻地位.描述}」`);
+        defaultLogger.log(`無法使用常規方法獲取「${字}」的音韻地位，使用資料庫中已有的音韻地位「${當前音韻地位.描述}」`);
         return;
       }
     }

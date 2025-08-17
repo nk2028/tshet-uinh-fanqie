@@ -61,3 +61,7 @@ h6 {
   font-family: 'CharisSILW', serif;
   font-language-override: 'KOR';
 }
+
+a {
+  @apply underline decoration-1 underline-offset-4 decoration-gray-400/50 hover:decoration-blue-500/80 transition;
+}

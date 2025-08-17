@@ -1,5 +1,6 @@
 import TshetUinh, { defaultLogger, 執行反切, 音韻地位 } from 'tshet-uinh';
 import 解釋字的音韻地位來源 from './解釋音韻地位';
+import 執行特殊反切 from './特殊反切';
 
 function removeDuplicates<T>(arr: T[]): T[] {
   const seen = new Set<T>();
@@ -48,23 +49,34 @@ export const calculateFanqie = (
   過程.push(defaultLogger.popAll().join('\n\n'));
 
   過程.push('# 根據上下字音韻地位得出被切字音韻地位');
-  const 結果 = 執行反切(上字音韻地位, 下字音韻地位);
-  defaultLogger.log(
-    `因此，被切字的音韻地位為${結果
-      .map(當前音韻地位 => {
-        const 廣韻小韻號_字頭 = 音韻地位2廣韻小韻號_字頭(當前音韻地位);
-        if (!廣韻小韻號_字頭) {
-          return `「${當前音韻地位.描述}」`;
-        }
-        const [廣韻小韻號, 字頭] = 廣韻小韻號_字頭;
-        return `「[${當前音韻地位.描述}](${廣韻小韻號2小韻Url(廣韻小韻號)})」（${字頭}）`;
-      })
-      .join(', ')}`
-  );
+  let 反切結果 = 執行反切(上字音韻地位, 下字音韻地位);
+  if (反切結果.length === 0) {
+    反切結果 = 執行特殊反切(上字, 下字, 上字音韻地位, 下字音韻地位);
+  }
+
+  if (反切結果.length === 0) {
+    defaultLogger.log('因此，無法得出被切字的音韻地位');
+  } else {
+    defaultLogger.log(
+      `因此，被切字的音韻地位為${反切結果
+        .map(當前音韻地位 => {
+          const 廣韻小韻號_字頭 = 音韻地位2廣韻小韻號_字頭(當前音韻地位);
+          if (!廣韻小韻號_字頭) {
+            return `「${當前音韻地位.描述}」`;
+          }
+          const [廣韻小韻號, 字頭] = 廣韻小韻號_字頭;
+          return `「[${當前音韻地位.描述}](${廣韻小韻號2小韻Url(廣韻小韻號)})」（${字頭}）`;
+        })
+        .join(', ')}`
+    );
+  }
+
   過程.push(defaultLogger.popAll().join('\n\n'));
 
-  過程.push('# 根據被切字音韻地位推導現代音（尚不完善）');
-  const 推導結果 = 結果.map(當前音韻地位 => 推導現代音(當前音韻地位));
+  if (反切結果.length > 0) {
+    過程.push('# 根據被切字音韻地位推導現代音（尚不完善）');
+  }
+  const 推導結果 = 反切結果.map(當前音韻地位 => 推導現代音(當前音韻地位));
   過程.push(defaultLogger.popAll().join('\n\n'));
 
   defaultLogger.enable = false;

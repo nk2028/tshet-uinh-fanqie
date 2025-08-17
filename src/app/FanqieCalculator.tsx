@@ -29,13 +29,21 @@ const 預設反切: string[] = [
   '殊六',
   '良涉',
   '蘇合',
+  '都江',
+  '昌紿',
+  '人兮',
+  // for testing
+  // '之前', // invalid 反切
+  // '鎶定', // no results for 鎶
+  // '他凪', // no results for 凪
+  // '鎶凪', // no results for 鎶 and 凪
 ];
 
 const FanqieCalculator: React.FC = () => {
   const [上字, set上字] = useState<string>('');
   const [下字, set下字] = useState<string>('');
-  const [上字候選, set上字候選] = useState<檢索結果[]>([]);
-  const [下字候選, set下字候選] = useState<檢索結果[]>([]);
+  const [上字候選, set上字候選] = useState<檢索結果[] | null>(null);
+  const [下字候選, set下字候選] = useState<檢索結果[] | null>(null);
   const [上字當前選擇, set上字當前選擇] = useState<音韻地位 | null>(null);
   const [下字當前選擇, set下字當前選擇] = useState<音韻地位 | null>(null);
   const [反切結果, set反切結果] = useState<string[]>([]);
@@ -54,31 +62,31 @@ const FanqieCalculator: React.FC = () => {
   ]);
 
   // 處理上字輸入
-  const handle上字Change = (value: string) => {
-    set上字(value);
-    if (value.length === 1) {
-      const readings = TshetUinh.資料.query字頭(value);
-      set上字候選(readings);
-      set上字當前選擇(readings.length > 0 ? readings[0].音韻地位 : null);
-      set上字選單Open(false);
-    } else if (value.length === 0) {
-      set上字候選([]);
+  const handle上字Change = (字: string) => {
+    set上字(字);
+    if ([...字].length !== 1) {
+      set上字候選(null);
       set上字當前選擇(null);
+      set上字選單Open(false);
+    } else {
+      const 候選 = TshetUinh.資料.query字頭(字);
+      set上字候選(候選);
+      set上字當前選擇(候選.length > 0 ? 候選[0].音韻地位 : null);
       set上字選單Open(false);
     }
   };
 
   // 處理下字輸入
-  const handle下字Change = (value: string) => {
-    set下字(value);
-    if (value.length === 1) {
-      const readings = TshetUinh.資料.query字頭(value);
-      set下字候選(readings);
-      set下字當前選擇(readings.length > 0 ? readings[0].音韻地位 : null);
-      set下字選單Open(false);
-    } else if (value.length === 0) {
-      set下字候選([]);
+  const handle下字Change = (字: string) => {
+    set下字(字);
+    if ([...字].length !== 1) {
+      set下字候選(null);
       set下字當前選擇(null);
+      set下字選單Open(false);
+    } else {
+      const 候選 = TshetUinh.資料.query字頭(字);
+      set下字候選(候選);
+      set下字當前選擇(候選.length > 0 ? 候選[0].音韻地位 : null);
       set下字選單Open(false);
     }
   };
@@ -122,6 +130,18 @@ const FanqieCalculator: React.FC = () => {
 
   // 計算反切結果
   useEffect(() => {
+    // 無法查詢到上字或下字的情況
+    const 無法查詢到上字 = 上字候選 !== null && 上字候選.length === 0;
+    const 無法查詢到下字 = 下字候選 !== null && 下字候選.length === 0;
+    if (無法查詢到上字 || 無法查詢到下字) {
+      set反切結果([]);
+      const 上字Msg = 無法查詢到上字 ? [`上字「${上字}」`] : [];
+      const 下字Msg = 無法查詢到下字 ? [`下字「${下字}」`] : [];
+      const fullMsg = [...上字Msg, ...下字Msg].join('與');
+      set反切過程(`無法查詢到${fullMsg}的音韻地位`);
+      return;
+    }
+
     if (上字當前選擇 && 下字當前選擇) {
       const res = calculateFanqie(推導現代音, 上字, 下字, 上字當前選擇, 下字當前選擇);
       set反切結果(res.結果);
@@ -130,7 +150,7 @@ const FanqieCalculator: React.FC = () => {
       set反切結果([]);
       set反切過程('');
     }
-  }, [推導現代音, 上字, 下字, 上字當前選擇, 下字當前選擇]);
+  }, [推導現代音, 上字, 下字, 上字候選, 下字候選, 上字當前選擇, 下字當前選擇]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
@@ -194,8 +214,8 @@ const FanqieCalculator: React.FC = () => {
           </div>
           <div className="table-row items-center space-x-8">
             <div className="table-cell">
-              {/* 左側讀音選擇 */}
-              {上字候選.length > 1 && (
+              {/* 上字讀音選擇 */}
+              {上字候選 !== null && 上字候選.length > 1 && (
                 <CustomDropdown
                   候選={上字候選}
                   當前選擇={上字當前選擇}
@@ -209,8 +229,8 @@ const FanqieCalculator: React.FC = () => {
             </div>
             <div className="table-cell"></div>
             <div className="table-cell">
-              {/* 右側讀音選擇 */}
-              {下字候選.length > 1 && (
+              {/* 下字讀音選擇 */}
+              {下字候選 !== null && 下字候選.length > 1 && (
                 <CustomDropdown
                   候選={下字候選}
                   當前選擇={下字當前選擇}
@@ -279,11 +299,19 @@ const FanqieCalculator: React.FC = () => {
       <footer className="mt-8 max-w-3xl">
         <p className="text-gray-500 text-sm/6">
           反切計算器由{' '}
-          <a href="https://nk2028.shn.hk/" className="underline" target="_blank">
+          <a href="https://nk2028.shn.hk/" target="_blank">
             nk2028
           </a>{' '}
-          項目開發。歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼公開於{' '}
-          <a href="https://github.com/nk2028/tshet-uinh-fanqie" className="underline" target="_blank">
+          工作組研發。《王三》所用書影為
+          <a href="https://book.douban.com/subject/27591818/" target="_blank">
+            江蘇鳳凰教育出版社《唐寫本王仁昫刊謬補缺切韻》
+          </a>
+          。《韻鏡》所用版本為古逸叢書本，書影為
+          <a href="https://book.douban.com/subject/1289012/" target="_blank">
+            江蘇教育出版社《宋本廣韻》
+          </a>
+          。歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼發佈於{' '}
+          <a href="https://github.com/nk2028/tshet-uinh-fanqie" target="_blank">
             GitHub
           </a>
           。
