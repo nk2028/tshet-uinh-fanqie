@@ -13,28 +13,20 @@ interface CustomDropdownProps {
 }
 
 // 自定義下拉組件
-const CustomDropdown: React.FC<CustomDropdownProps> = ({
-  候選,
-  當前選擇,
-  推導現代音,
-  onSelect,
-  isOpen,
-  setIsOpen,
-  dropdownRef,
-}) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ 候選, 當前選擇, 推導現代音, onSelect, isOpen, setIsOpen, dropdownRef }) => {
   const selectedItem = 候選.find(p => 當前選擇 && p.音韻地位.等於(當前選擇));
 
   return (
-    <div className="mt-4 relative w-60" ref={dropdownRef}>
+    <div className="relative fanqie-select-box" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-left text-white focus:border-blue-500 focus:outline-none hover:bg-gray-700 transition-colors flex items-center justify-between"
+        className="fanqie-select-btn bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none flex items-center justify-between"
       >
         <div className="flex-1 min-w-0">
           {selectedItem ? (
             <div>
-              <div className="text-blue-300">{`${selectedItem.音韻地位.描述} (${推導現代音(selectedItem.音韻地位)})`}</div>
-              <div className="text-sm text-gray-300 truncate">{selectedItem.釋義}</div>
+              <div className="fanqie-select-btn-title">{`${selectedItem.音韻地位.描述} (${推導現代音(selectedItem.音韻地位)})`}</div>
+              <div className="fanqie-select-btn-text truncate">{selectedItem.釋義}</div>
             </div>
           ) : (
             <span></span>
@@ -52,10 +44,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
                 onSelect(item.音韻地位);
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-3 text-left hover:bg-gray-700 transition-colors border-b border-gray-700 last:border-b-0"
+              className="fanqie-select-btn border-b border-gray-700 last:border-b-0"
             >
-              <div className="text-blue-300 mb-1">{`${item.音韻地位.描述} (${推導現代音(item.音韻地位)})`}</div>
-              <div className="text-sm text-gray-300 leading-relaxed">{item.釋義}</div>
+              <div className="fanqie-select-btn-title">{`${item.音韻地位.描述} (${推導現代音(item.音韻地位)})`}</div>
+              <div className="fanqie-select-btn-text leading-relaxed">{item.釋義}</div>
             </button>
           ))}
         </div>

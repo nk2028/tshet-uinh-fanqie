@@ -65,3 +65,69 @@ h6 {
 a {
   @apply underline decoration-1 underline-offset-4 decoration-gray-400/50 hover:decoration-blue-500/80 transition;
 }
+
+.fanqie-div {
+  @apply gap-y-6;
+}
+
+.fanqie-input-box {
+  @apply w-24 h-24 bg-gray-800 border-2 border-gray-600 rounded-lg text-center text-white text-4xl focus:border-blue-500 focus:outline-none;
+}
+
+.fanqie-result-box {
+  @apply w-36 h-24 bg-gray-800 border-2 border-gray-600 rounded-lg text-center text-white text-4xl focus:border-blue-500 focus:outline-none flex items-center justify-center;
+}
+
+.fanqie-math-symbol {
+  @apply px-4 text-3xl text-gray-400;
+}
+
+.fanqie-select-box {
+  @apply mt-4 w-60;
+}
+
+.fanqie-select-btn {
+  @apply w-full px-4 py-3 text-left hover:bg-gray-700 transition-colors;
+}
+
+.fanqie-select-btn-title {
+  @apply text-base text-blue-300 mb-1;
+}
+
+.fanqie-select-btn-text {
+  @apply text-sm text-gray-300;
+}
+
+@media screen and (max-width: 600px) {
+  .fanqie-div {
+    @apply gap-y-4;
+  }
+
+  .fanqie-input-box {
+    @apply w-16 h-16 text-2xl;
+  }
+
+  .fanqie-result-box {
+    @apply w-24 h-16 text-2xl;
+  }
+
+  .fanqie-math-symbol {
+    @apply text-2xl;
+  }
+
+  .fanqie-select-box {
+    @apply mt-3 w-36;
+  }
+
+  .fanqie-select-btn {
+    @apply px-3 py-2;
+  }
+
+  .fanqie-select-btn-title {
+    @apply text-sm;
+  }
+
+  .fanqie-select-btn-text {
+    @apply text-xs;
+  }
+}

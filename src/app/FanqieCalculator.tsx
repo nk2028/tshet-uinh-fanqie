@@ -157,44 +157,83 @@ const FanqieCalculator: React.FC = () => {
       <h1 className="mb-14 text-4xl font-bold">反切計算器</h1>
 
       <div className="w-full max-w-3xl">
-        {/* 算式 */}
-        <div className="mx-auto mb-10 table items-center justify-center">
-          {/* 第一行 */}
-          <div className="table-row items-center space-x-8">
-            {/* 上字 */}
-            <div className="table-cell text-center align-center items-center">
-              <input
-                type="text"
-                value={上字}
-                onChange={e => handle上字Change(e.target.value)}
-                onPaste={e => handlePaste(e, 'left')}
-                className="w-24 h-24 bg-gray-800 border-2 border-gray-600 rounded-lg text-center text-white text-4xl focus:border-blue-500 focus:outline-none"
-                placeholder="_"
-              />
+        {/* 反切算式 */}
+        <div className="mx-auto flex flex-wrap items-start justify-center fanqie-div">
+          {/* 上字、乘號、下字、上下字讀音選擇 */}
+          <div className="table">
+            {/* 第一行（上字、乘號、下字） */}
+            <div className="table-row items-center">
+              {/* 上字 */}
+              <div className="table-cell text-center align-center items-center">
+                <input
+                  type="text"
+                  value={上字}
+                  onChange={e => handle上字Change(e.target.value)}
+                  onPaste={e => handlePaste(e, 'left')}
+                  className="fanqie-input-box"
+                  placeholder="_"
+                />
+              </div>
+
+              <div className="table-cell fanqie-math-symbol">×</div>
+
+              {/* 下字 */}
+              <div className="table-cell text-center align-center items-center">
+                <input
+                  type="text"
+                  value={下字}
+                  onChange={e => handle下字Change(e.target.value)}
+                  onPaste={e => handlePaste(e, 'right')}
+                  className="fanqie-input-box"
+                  placeholder="_"
+                />
+              </div>
             </div>
 
-            <span className="table-cell px-4 text-3xl text-gray-400">×</span>
+            {/* 第二行（上下字讀音選擇） */}
+            {((上字候選 !== null && 上字候選.length > 1) || (下字候選 !== null && 下字候選.length > 1)) && (
+              <div className="table-row items-center space-x-8">
+                <div className="table-cell">
+                  {/* 上字讀音選擇 */}
+                  {上字候選 !== null && 上字候選.length > 1 && (
+                    <CustomDropdown
+                      候選={上字候選}
+                      當前選擇={上字當前選擇}
+                      推導現代音={推導現代音}
+                      onSelect={set上字當前選擇}
+                      isOpen={上字選單Open}
+                      setIsOpen={set上字選單Open}
+                      dropdownRef={上字選單Ref}
+                    />
+                  )}
+                </div>
+                <div className="table-cell"></div>
+                <div className="table-cell">
+                  {/* 下字讀音選擇 */}
+                  {下字候選 !== null && 下字候選.length > 1 && (
+                    <CustomDropdown
+                      候選={下字候選}
+                      當前選擇={下字當前選擇}
+                      推導現代音={推導現代音}
+                      onSelect={set下字當前選擇}
+                      isOpen={下字選單Open}
+                      setIsOpen={set下字選單Open}
+                      dropdownRef={下字選單Ref}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
-            {/* 下字 */}
-            <div className="table-cell text-center align-center items-center">
-              <input
-                type="text"
-                value={下字}
-                onChange={e => handle下字Change(e.target.value)}
-                onPaste={e => handlePaste(e, 'right')}
-                className="w-24 h-24 bg-gray-800 border-2 border-gray-600 rounded-lg text-center text-white text-4xl focus:border-blue-500 focus:outline-none"
-                placeholder="_"
-              />
-            </div>
+          {/* 箭頭、結果 */}
+          <div className="flex items-center justify-center">
+            {/* 箭頭 */}
+            <div className="fanqie-math-symbol">→</div>
 
-            <span className="table-cell px-4 text-3xl text-gray-400">→</span>
-
-            {/* 結果顯示 */}
-            <div className="table-cell text-center align-top items-center">
-              <div
-                className="w-36 h-24 flex bg-gray-800 border-2 border-gray-600 rounded-lg items-center justify-center text-4xl text-white"
-                lang="zh-Latn-fonipa"
-              >
+            {/* 結果 */}
+            <div className="text-center items-center">
+              <div className="fanqie-result-box" lang="zh-Latn-fonipa">
                 {反切結果.length === 0 ? (
                   <></>
                 ) : 反切結果.length === 1 ? (
@@ -210,37 +249,6 @@ const FanqieCalculator: React.FC = () => {
                   </>
                 )}
               </div>
-            </div>
-          </div>
-          <div className="table-row items-center space-x-8">
-            <div className="table-cell">
-              {/* 上字讀音選擇 */}
-              {上字候選 !== null && 上字候選.length > 1 && (
-                <CustomDropdown
-                  候選={上字候選}
-                  當前選擇={上字當前選擇}
-                  推導現代音={推導現代音}
-                  onSelect={set上字當前選擇}
-                  isOpen={上字選單Open}
-                  setIsOpen={set上字選單Open}
-                  dropdownRef={上字選單Ref}
-                />
-              )}
-            </div>
-            <div className="table-cell"></div>
-            <div className="table-cell">
-              {/* 下字讀音選擇 */}
-              {下字候選 !== null && 下字候選.length > 1 && (
-                <CustomDropdown
-                  候選={下字候選}
-                  當前選擇={下字當前選擇}
-                  推導現代音={推導現代音}
-                  onSelect={set下字當前選擇}
-                  isOpen={下字選單Open}
-                  setIsOpen={set下字選單Open}
-                  dropdownRef={下字選單Ref}
-                />
-              )}
             </div>
           </div>
         </div>
@@ -272,7 +280,7 @@ const FanqieCalculator: React.FC = () => {
         <div className="my-8 bg-gray-900 rounded-lg px-6 py-4">
           <h3 className="text-xl mb-4">選項</h3>
           {/* 現代音選擇 */}
-          <div className="flex items-center justify-left space-x-2">
+          <div className="flex flex-wrap items-center justify-left space-x-2">
             <div>現代音選擇</div>
             {[推導普通話, 推導廣州話, 推導上海話].map((fn, index) => (
               <input
