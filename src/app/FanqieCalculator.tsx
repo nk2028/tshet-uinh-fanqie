@@ -277,7 +277,7 @@ const FanqieCalculator: React.FC = () => {
           </p>
         </div>
 
-        <div className="my-8 bg-gray-900 rounded-lg px-6 py-4">
+        <div className="mt-8 bg-gray-900 rounded-lg px-6 py-4">
           <h3 className="text-xl mb-4">選項</h3>
           {/* 現代音選擇 */}
           <div className="flex flex-wrap items-center justify-left space-x-2">
@@ -296,7 +296,7 @@ const FanqieCalculator: React.FC = () => {
 
         {/* 反切過程顯示 */}
         {反切過程 && (
-          <div className="bg-gray-900 rounded-lg px-6 pt-2 pb-4">
+          <div className="mt-8 bg-gray-900 rounded-lg px-6 pt-2 pb-4">
             <div className="prose prose-invert fanqie-process-area max-w-full">
               <MarkdownWithImagePreview content={反切過程}></MarkdownWithImagePreview>
             </div>
@@ -334,7 +334,7 @@ const FanqieCalculator: React.FC = () => {
           <a href="https://github.com/nk2028/tshet-uinh-fanqie/issues" target="_blank">
             GitHub Issues
           </a>{' '}
-          回報。
+          反饋。
         </p>
 
         <p className="text-gray-500 text-sm/6">
