@@ -15,7 +15,7 @@ const 王三頁碼2書影Url = (小韻號: string): string[] => {
 
 const generate韻鏡Url = (當前韻鏡位置: 韻鏡位置): string => {
   const urlOffset = 9;
-  return `https://hiunnkyanq-1305783649.cos.accelerate.myqcloud.com/%E5%8F%A4%E9%80%B8%E5%8F%A2%E6%9B%B8%E6%9C%AC/thumb/${
+  return `https://cethiunn-1305783649.cos.accelerate.myqcloud.com/%E9%9F%BB%E9%8F%A1/%E5%8F%A4%E9%80%B8%E5%8F%A2%E6%9B%B8%E6%9C%AC/thumb/${
     當前韻鏡位置.轉號 + urlOffset
   }.png`;
 };
