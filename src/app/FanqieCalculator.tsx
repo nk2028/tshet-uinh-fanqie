@@ -304,13 +304,21 @@ const FanqieCalculator: React.FC = () => {
         )}
       </div>
 
-      <footer className="mt-8 max-w-3xl">
+      <footer className="flex flex-col gap-4 mt-8 max-w-3xl">
         <p className="text-gray-500 text-sm/6">
           反切計算器由{' '}
           <a href="https://nk2028.shn.hk/" target="_blank">
             nk2028
           </a>{' '}
-          工作組研發。《王三》所用書影為
+          工作組研發。反切規則參考了潘悟雲《反切行為與反切原則》。現代音的推導規則取自 nk2028 工作組研發的{' '}
+          <a href="https://github.com/nk2028/tshet-uinh-examples" target="_blank">
+            Tshet-uinh Examples
+          </a>{' '}
+          專案。《王三》及《韻鏡》書影取自 nk2028 工作組研發並自費託管的{' '}
+          <a href="https://github.com/nk2028/tshet-uinh-images" target="_blank">
+            Tshet-uinh Images
+          </a>{' '}
+          專案。其中，《王三》所用書影為
           <a href="https://book.douban.com/subject/27591818/" target="_blank">
             江蘇鳳凰教育出版社《唐寫本王仁昫刊謬補缺切韻》
           </a>
@@ -322,7 +330,15 @@ const FanqieCalculator: React.FC = () => {
           <a href="https://github.com/nk2028/tshet-uinh-fanqie" target="_blank">
             GitHub
           </a>
-          。
+          。如發現任何錯誤，歡迎透過{' '}
+          <a href="https://github.com/nk2028/tshet-uinh-fanqie/issues" target="_blank">
+            GitHub Issues
+          </a>{' '}
+          回報。
+        </p>
+
+        <p className="text-gray-500 text-sm/6">
+          本頁面是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會收集閣下在本頁面中鍵入的任何內容。任何與閣下鍵入的內容相關的運算全部在閣下的瀏覽器本地完成，本頁面不會將包括反切在內的任何閣下鍵入的資料傳送至任何伺服器。
         </p>
       </footer>
     </div>
