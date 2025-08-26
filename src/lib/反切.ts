@@ -74,7 +74,7 @@ export const calculateFanqie = (
   過程.push(defaultLogger.popAll().join('\n\n'));
 
   if (反切結果.length > 0) {
-    過程.push('# 根據被切字音韻地位推導現代音（尚不完善）');
+    過程.push('# 根據被切字音韻地位推導現代音');
   }
   const 推導結果 = 反切結果.map(當前音韻地位 => 推導現代音(當前音韻地位));
   過程.push(defaultLogger.popAll().join('\n\n'));

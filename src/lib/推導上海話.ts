@@ -604,7 +604,7 @@ const 推導上海話 = (當前音韻地位: 音韻地位): string => {
     else 結果 = finalise(文讀音) + '(文) ' + finalise(白讀音) + '(白)'; // 此處將原程式碼的換行改為括號附註，便於頁面展示
   }
 
-  defaultLogger.log(`上海話推導過程暫缺，但推導結果為 ${結果}`);
+  defaultLogger.log(`上海話推導過程暫缺，推導結果為 ${結果}`);
   return 結果;
 };
 
