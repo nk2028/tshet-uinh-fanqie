@@ -326,7 +326,11 @@ const FanqieCalculator: React.FC = () => {
           <a href="https://book.douban.com/subject/1289012/" target="_blank">
             江蘇教育出版社《宋本廣韻》
           </a>
-          。歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼發佈於{' '}
+          。
+        </p>
+
+        <p className="text-gray-500 text-sm/6">
+          歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram 更新頻道（@nk2028）。本頁面原始碼發佈於{' '}
           <a href="https://github.com/nk2028/tshet-uinh-fanqie" target="_blank">
             GitHub
           </a>
