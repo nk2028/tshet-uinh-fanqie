@@ -1,4 +1,4 @@
-import { 韻鏡位置 } from 'tshet-uinh';
+import { 韻鏡位置 } from 'uinh-kyaengh';
 
 const 韻鏡data = `蓬1,1,3
 蒙1,1,4

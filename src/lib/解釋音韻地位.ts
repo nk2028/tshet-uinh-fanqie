@@ -1,4 +1,6 @@
-import TshetUinh, { defaultLogger, 音韻地位, 音韻地位2韻鏡位置, 韻鏡位置 } from 'tshet-uinh';
+import TshetUinh, { defaultLogger, 音韻地位 } from 'tshet-uinh';
+import { 音韻地位2韻鏡位置, 韻鏡位置 } from 'uinh-kyaengh';
+
 import { 韻鏡位置2字頭 } from './韻鏡資料';
 import { 音韻地位2所有王三小韻 } from './王三資料';
 
