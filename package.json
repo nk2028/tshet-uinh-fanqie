@@ -16,7 +16,7 @@
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
     "tshet-uinh": "^0.15.4",
-    "uinh-kyaengh": "^0.1.1"
+    "uinh-kyaengh": "^0.1.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
