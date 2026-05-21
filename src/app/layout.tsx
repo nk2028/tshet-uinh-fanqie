@@ -26,8 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-HK">
-      <body>
+      <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ayaka14732/syyon-vencie@6b08e67/charissil/CharisSIL.css" />
+      </head>
+      <body>
         {children}
         <script
           defer
