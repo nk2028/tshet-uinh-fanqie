@@ -154,7 +154,7 @@ const FanqieCalculator: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
-      <h1 className="mb-14 text-4xl font-bold">反切計算器</h1>
+      <h1 className="mb-14 break-keep text-center text-4xl font-bold leading-tight">nk2028 反切計算器</h1>
 
       <div className="w-full max-w-3xl">
         {/* 反切算式 */}
@@ -306,7 +306,7 @@ const FanqieCalculator: React.FC = () => {
 
       <footer className="flex flex-col gap-4 mt-8 max-w-3xl">
         <p className="text-gray-500 text-sm/6">
-          反切計算器由{' '}
+          nk2028 反切計算器由{' '}
           <a href="https://nk2028.shn.hk/" target="_blank">
             nk2028
           </a>{' '}
