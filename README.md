@@ -1,6 +1,6 @@
 [English README](README-en.md) 
 
-# 反切計算器
+# nk2028 反切計算器
 
 ## 項目簡介
 
