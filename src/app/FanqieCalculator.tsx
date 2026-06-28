@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { RotateCcw } from 'lucide-react';
 
 import TshetUinh, { 音韻地位 } from 'tshet-uinh';
 import { 檢索結果 } from 'tshet-uinh/lib/資料';
+import { 推導設定 } from 'tshet-uinh-deriver-tools';
+import type { Parameter, 設定項 } from 'tshet-uinh-deriver-tools';
 
 import { calculateFanqie } from '../lib/反切';
 import CustomDropdown from './Dropdown';
@@ -39,6 +42,30 @@ const 預設反切: string[] = [
   // '鎶凪', // no results for 鎶 and 凪
 ];
 
+type 推導現代音函數 = (當前音韻地位: 音韻地位, 選項?: Readonly<Record<string, unknown>>) => string;
+
+interface 現代音方案 {
+  名稱: string;
+  推導: 推導現代音函數;
+  取得選項設定?: (當前選項: Readonly<Record<string, unknown>>) => 推導設定;
+}
+
+const 現代音方案們: 現代音方案[] = [
+  { 名稱: '普通話', 推導: 推導普通話 },
+  { 名稱: '廣州話', 推導: 推導廣州話 },
+  {
+    名稱: '上海話',
+    推導: 推導上海話,
+    取得選項設定: 當前選項 => new 推導設定(推導上海話()).with(當前選項),
+  },
+];
+
+const 空推導選項: Record<string, unknown> = {};
+
+function is參數設定項(item: 設定項): item is Parameter {
+  return 'key' in item;
+}
+
 const FanqieCalculator: React.FC = () => {
   const [上字, set上字] = useState<string>('');
   const [下字, set下字] = useState<string>('');
@@ -50,16 +77,40 @@ const FanqieCalculator: React.FC = () => {
   const [反切過程, set反切過程] = useState<string>('');
   const [上字選單Open, set上字選單Open] = useState<boolean>(false);
   const [下字選單Open, set下字選單Open] = useState<boolean>(false);
-  const [推導現代音, set推導現代音] = useState<(當前音韻地位: 音韻地位) => string>(() => 推導普通話);
+  const [當前現代音方案, set當前現代音方案] = useState<現代音方案>(現代音方案們[0]);
+  const [推導選項, set推導選項] = useState<Record<string, Record<string, unknown>>>({});
 
   const 上字選單Ref = useRef<HTMLDivElement>(null);
   const 下字選單Ref = useRef<HTMLDivElement>(null);
 
-  const fnNameMap = new Map<(當前音韻地位: 音韻地位) => string, string>([
-    [推導普通話, '普通話'],
-    [推導廣州話, '廣州話'],
-    [推導上海話, '上海話'],
-  ]);
+  const 當前方案選項 = 推導選項[當前現代音方案.名稱] ?? 空推導選項;
+  const 當前選項設定 = useMemo(
+    () => 當前現代音方案.取得選項設定?.(當前方案選項) ?? new 推導設定([]),
+    [當前現代音方案, 當前方案選項]
+  );
+  const 實際推導選項 = 當前選項設定.選項;
+  const 推導現代音 = useMemo(
+    () => (當前音韻地位: 音韻地位) => 當前現代音方案.推導(當前音韻地位, 實際推導選項),
+    [當前現代音方案, 實際推導選項]
+  );
+
+  const handle推導選項Change = (key: string, value: unknown) => {
+    set推導選項(prev => ({
+      ...prev,
+      [當前現代音方案.名稱]: {
+        ...(prev[當前現代音方案.名稱] ?? {}),
+        [key]: value,
+      },
+    }));
+  };
+
+  const reset當前推導選項 = () => {
+    set推導選項(prev => {
+      const next = { ...prev };
+      delete next[當前現代音方案.名稱];
+      return next;
+    });
+  };
 
   // 處理上字輸入
   const handle上字Change = (字: string) => {
@@ -282,16 +333,101 @@ const FanqieCalculator: React.FC = () => {
           {/* 現代音選擇 */}
           <div className="flex flex-wrap items-center justify-left space-x-2">
             <div>現代音選擇</div>
-            {[推導普通話, 推導廣州話, 推導上海話].map((fn, index) => (
+            {現代音方案們.map((方案, index) => (
               <input
                 type="button"
                 key={index}
-                value={fnNameMap.get(fn)}
-                onClick={() => set推導現代音(() => fn)}
-                className={`px-2 py-1 rounded-lg ${推導現代音 === fn ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
+                value={方案.名稱}
+                onClick={() => set當前現代音方案(方案)}
+                className={`px-2 py-1 rounded-lg ${當前現代音方案 === 方案 ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
               />
             ))}
           </div>
+
+          {當前選項設定.列表.some(is參數設定項) && (
+            <div className="mt-4 border-t border-gray-700 pt-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>{當前現代音方案.名稱}選項</div>
+                <button
+                  type="button"
+                  onClick={reset當前推導選項}
+                  className="inline-flex items-center gap-1 rounded-lg bg-gray-700 px-2 py-1 text-sm hover:bg-gray-600"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span>重置</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {當前選項設定.列表.map((item, index) => {
+                  if ('type' in item && item.type === 'newline') return <div key={index} className="hidden sm:block" />;
+                  if ('type' in item && item.type === 'groupLabel') {
+                    return (
+                      <div key={index} className="sm:col-span-2 text-sm font-semibold text-gray-300" title={item.description}>
+                        {item.text}
+                      </div>
+                    );
+                  }
+                  if (!is參數設定項(item)) return null;
+
+                  const label = item.text ?? item.key;
+
+                  if (item.options) {
+                    const options = item.options;
+                    const selectedIndex = Math.max(
+                      0,
+                      options.findIndex(option => Object.is(option.value, item.value))
+                    );
+
+                    return (
+                      <label key={item.key} className="flex items-center justify-between gap-3 text-sm" title={item.description}>
+                        <span className="shrink-0 text-gray-300">{label}</span>
+                        <select
+                          value={selectedIndex}
+                          onChange={event => handle推導選項Change(item.key, options[Number(event.target.value)].value)}
+                          className="min-w-0 flex-1 rounded-lg border border-gray-600 bg-gray-800 px-2 py-1 text-white focus:border-blue-500 focus:outline-none"
+                        >
+                          {options.map((option, optionIndex) => (
+                            <option key={optionIndex} value={optionIndex}>
+                              {option.text ?? String(option.value)}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    );
+                  }
+
+                  if (typeof item.value === 'boolean') {
+                    return (
+                      <label key={item.key} className="flex items-center gap-2 text-sm text-gray-300" title={item.description}>
+                        <input
+                          type="checkbox"
+                          checked={item.value}
+                          onChange={event => handle推導選項Change(item.key, event.target.checked)}
+                          className="h-4 w-4 accent-blue-600"
+                        />
+                        <span>{label}</span>
+                      </label>
+                    );
+                  }
+
+                  return (
+                    <label key={item.key} className="flex items-center justify-between gap-3 text-sm" title={item.description}>
+                      <span className="shrink-0 text-gray-300">{label}</span>
+                      <input
+                        type={typeof item.value === 'number' ? 'number' : 'text'}
+                        value={typeof item.value === 'string' || typeof item.value === 'number' ? String(item.value) : ''}
+                        onChange={event =>
+                          handle推導選項Change(item.key, typeof item.value === 'number' ? Number(event.target.value) : event.target.value)
+                        }
+                        className="min-w-0 flex-1 rounded-lg border border-gray-600 bg-gray-800 px-2 py-1 text-white focus:border-blue-500 focus:outline-none"
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 反切過程顯示 */}

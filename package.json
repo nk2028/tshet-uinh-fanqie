@@ -16,6 +16,7 @@
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
     "tshet-uinh": "^0.15.4",
+    "tshet-uinh-deriver-tools": "^0.2.0",
     "uinh-kyaengh": "^0.1.2"
   },
   "devDependencies": {
