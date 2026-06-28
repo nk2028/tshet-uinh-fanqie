@@ -14,6 +14,7 @@ import MarkdownWithImagePreview from './MarkdownWithImagePreview';
 import 推導普通話 from '@/lib/推導普通話';
 import 推導廣州話 from '@/lib/推導廣州話';
 import 推導上海話 from '@/lib/推導上海話';
+import 推導大埔話 from '@/lib/推導大埔話';
 
 const 預設反切: string[] = [
   '德紅',
@@ -57,6 +58,11 @@ const 現代音方案們: 現代音方案[] = [
     名稱: '上海話',
     推導: 推導上海話,
     取得選項設定: 當前選項 => new 推導設定(推導上海話()).with(當前選項),
+  },
+  {
+    名稱: '大埔話',
+    推導: 推導大埔話,
+    取得選項設定: 當前選項 => new 推導設定(推導大埔話()).with(當前選項),
   },
 ];
 
