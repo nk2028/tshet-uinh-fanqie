@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:taibu": "node scripts/compare-taibu.mjs",
-    "test": "npm run test:taibu"
+    "test": "node scripts/compare-examples.mjs"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.16",
