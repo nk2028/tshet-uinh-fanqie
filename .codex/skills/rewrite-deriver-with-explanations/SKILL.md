@@ -31,6 +31,7 @@ Use this skill when converting a compact tshet-uinh derivation scheme into a mor
 
 4. Explain post-processing separately.
    - If the scheme changes a coda, tone mark, romanization system, IPA output, or display format after initial rule matching, log that transformation as its own step.
+   - Spell out the actual branch condition for post-processing rules. For example, do not say `ii 按聲母分別轉為 ɿ 或 ʅ`; say `ii 接平舌聲母 z/c/s 轉為 ɿ` and `ii 接非平舌聲母轉為 ʅ`.
    - Keep formatting behavior in the deriver identical to the reference; UI-only formatting belongs in the UI layer.
 
 5. Validate parity and types.

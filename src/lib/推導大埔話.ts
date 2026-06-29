@@ -516,8 +516,13 @@ function 推導大埔話(
 
     let 元音結果 = 轉換後的元音們.join('');
     if (元音結果 === 'ɨ') {
-      defaultLogger.log('轉換 IPA 時，舌尖韻母 ii 按聲母分別轉為 ɿ 或 ʅ');
-      元音結果 = 平舌.includes(讀音.聲母) ? 'ɿ' : 'ʅ';
+      if (平舌.includes(讀音.聲母)) {
+        defaultLogger.log(`轉換 IPA 時，舌尖韻母 ii 接平舌聲母 ${讀音.聲母}（z/c/s），轉為 ɿ`);
+        元音結果 = 'ɿ';
+      } else {
+        defaultLogger.log(`轉換 IPA 時，舌尖韻母 ii 接非平舌聲母 ${讀音.聲母}（非 z/c/s），轉為 ʅ`);
+        元音結果 = 'ʅ';
+      }
     }
 
     const 轉換結果 = {
