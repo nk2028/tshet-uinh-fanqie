@@ -1,0 +1,5 @@
+interface:
+  display_name: "推導方案加解釋"
+  short_description: "改寫 tshet-uinh 推導方案並保持一致性"
+  brand_color: "#2563EB"
+  default_prompt: "Use $rewrite-deriver-with-explanations to refactor this tshet-uinh derivation scheme with rule explanations and parity tests."

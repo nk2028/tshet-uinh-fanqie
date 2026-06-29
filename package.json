@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:taibu": "node scripts/compare-taibu.mjs",
+    "test": "npm run test:taibu"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.16",
@@ -28,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "tailwindcss": "^4",
+    "tshet-uinh-examples": "^20260629.0.0",
     "typescript": "^5"
   }
 }
