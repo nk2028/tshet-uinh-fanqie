@@ -10,6 +10,7 @@ import { calculateFanqie } from '../lib/反切';
 import CustomDropdown from './Dropdown';
 import DeriverOptions from './DeriverOptions';
 import MarkdownWithImagePreview from './MarkdownWithImagePreview';
+import { 推導大埔話, 大埔話選項列表 } from '@/lib/推導大埔話';
 import { 推導普通話, 普通話選項列表 } from '@/lib/推導普通話';
 import { 推導廣州話, 廣州話選項列表 } from '@/lib/推導廣州話';
 import { 推導上海話, 上海話選項列表 } from '@/lib/推導上海話';
@@ -53,6 +54,7 @@ const 現代音方案們: readonly 現代音方案[] = [
   { 名稱: '普通話', 推導: 推導普通話, 選項列表: 普通話選項列表 },
   { 名稱: '廣州話', 推導: 推導廣州話, 選項列表: 廣州話選項列表 },
   { 名稱: '上海話', 推導: 推導上海話, 選項列表: 上海話選項列表 },
+  { 名稱: '大埔話', 推導: 推導大埔話, 選項列表: 大埔話選項列表 },
 ];
 
 const 空推導選項: Readonly<Record<string, unknown>> = {};
