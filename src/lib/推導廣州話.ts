@@ -2,11 +2,12 @@
 
 import { defaultLogger, 音韻地位 } from 'tshet-uinh';
 
-const 推導廣州話 = (當前音韻地位: 音韻地位): string => {
-  const is = (...x: Parameters<typeof 當前音韻地位.屬於>) => 當前音韻地位.屬於(...x);
-  const when = (...x: Parameters<typeof 當前音韻地位.判斷>) => 當前音韻地位.判斷(...x);
+export const 廣州話選項列表: readonly unknown[] = [];
 
-  // if (!當前音韻地位) return [];
+export const 推導廣州話 = (當前音韻地位: 音韻地位): string => {
+
+  const is = (...x: Parameters<音韻地位['屬於']>) => 當前音韻地位.屬於(...x);
+  const when = (...x: Parameters<音韻地位['判斷']>) => 當前音韻地位.判斷(...x);
 
   if (is`云母 通攝 舒聲`) {
     當前音韻地位 = 當前音韻地位.調整('匣母', ['匣母三等']);
@@ -356,5 +357,3 @@ const 推導廣州話 = (當前音韻地位: 音韻地位): string => {
   defaultLogger.log(`因此，音韻地位「${當前音韻地位.描述}」對應的廣州話為 ${結果}`);
   return 結果;
 };
-
-export default 推導廣州話;
