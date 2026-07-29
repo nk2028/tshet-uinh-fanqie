@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "tsc --noEmit && tsx scripts/compare-examples.ts"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.16",
@@ -16,6 +17,7 @@
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
     "tshet-uinh": "^0.15.4",
+    "tshet-uinh-deriver-tools": "^0.2.0",
     "uinh-kyaengh": "^0.1.2"
   },
   "devDependencies": {
@@ -27,6 +29,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "tailwindcss": "^4",
+    "tshet-uinh-examples": "^20260629.0.1",
+    "tsx": "^4.23.1",
     "typescript": "^5"
   }
 }

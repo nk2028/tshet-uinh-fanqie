@@ -1,16 +1,18 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 import TshetUinh, { 音韻地位 } from 'tshet-uinh';
 import { 檢索結果 } from 'tshet-uinh/lib/資料';
+import { 推導設定 } from 'tshet-uinh-deriver-tools';
 
 import { calculateFanqie } from '../lib/反切';
 import CustomDropdown from './Dropdown';
+import DeriverOptions from './DeriverOptions';
 import MarkdownWithImagePreview from './MarkdownWithImagePreview';
-import 推導普通話 from '@/lib/推導普通話';
-import 推導廣州話 from '@/lib/推導廣州話';
-import 推導上海話 from '@/lib/推導上海話';
+import { 推導普通話, 普通話選項列表 } from '@/lib/推導普通話';
+import { 推導廣州話, 廣州話選項列表 } from '@/lib/推導廣州話';
+import { 推導上海話, 上海話選項列表 } from '@/lib/推導上海話';
 
 const 預設反切: string[] = [
   '德紅',
@@ -39,6 +41,22 @@ const 預設反切: string[] = [
   // '鎶凪', // no results for 鎶 and 凪
 ];
 
+type 現代音推導函數 = (當前音韻地位: 音韻地位, 選項?: Readonly<Record<string, unknown>>) => string;
+
+interface 現代音方案 {
+  名稱: string;
+  推導: 現代音推導函數;
+  選項列表: readonly unknown[];
+}
+
+const 現代音方案們: readonly 現代音方案[] = [
+  { 名稱: '普通話', 推導: 推導普通話, 選項列表: 普通話選項列表 },
+  { 名稱: '廣州話', 推導: 推導廣州話, 選項列表: 廣州話選項列表 },
+  { 名稱: '上海話', 推導: 推導上海話, 選項列表: 上海話選項列表 },
+];
+
+const 空推導選項: Readonly<Record<string, unknown>> = {};
+
 const FanqieCalculator: React.FC = () => {
   const [上字, set上字] = useState<string>('');
   const [下字, set下字] = useState<string>('');
@@ -50,16 +68,39 @@ const FanqieCalculator: React.FC = () => {
   const [反切過程, set反切過程] = useState<string>('');
   const [上字選單Open, set上字選單Open] = useState<boolean>(false);
   const [下字選單Open, set下字選單Open] = useState<boolean>(false);
-  const [推導現代音, set推導現代音] = useState<(當前音韻地位: 音韻地位) => string>(() => 推導普通話);
+  const [當前現代音方案, set當前現代音方案] = useState<現代音方案>(現代音方案們[0]);
+  const [各方案選項, set各方案選項] = useState<Record<string, Record<string, unknown>>>({});
 
   const 上字選單Ref = useRef<HTMLDivElement>(null);
   const 下字選單Ref = useRef<HTMLDivElement>(null);
 
-  const fnNameMap = new Map<(當前音韻地位: 音韻地位) => string, string>([
-    [推導普通話, '普通話'],
-    [推導廣州話, '廣州話'],
-    [推導上海話, '上海話'],
-  ]);
+  const 當前方案選項 = 各方案選項[當前現代音方案.名稱] ?? 空推導選項;
+  const 當前方案設定 = useMemo(
+    () => new 推導設定(當前現代音方案.選項列表).with(當前方案選項),
+    [當前現代音方案, 當前方案選項]
+  );
+  const 推導現代音 = useMemo(
+    () => (當前音韻地位: 音韻地位) => 當前現代音方案.推導(當前音韻地位, 當前方案設定.選項),
+    [當前現代音方案, 當前方案設定]
+  );
+
+  const handle推導選項Change = (key: string, value: unknown) => {
+    set各方案選項(current => ({
+      ...current,
+      [當前現代音方案.名稱]: {
+        ...(current[當前現代音方案.名稱] ?? {}),
+        [key]: value,
+      },
+    }));
+  };
+
+  const reset當前推導選項 = () => {
+    set各方案選項(current => {
+      const next = { ...current };
+      delete next[當前現代音方案.名稱];
+      return next;
+    });
+  };
 
   // 處理上字輸入
   const handle上字Change = (字: string) => {
@@ -237,13 +278,15 @@ const FanqieCalculator: React.FC = () => {
                 {反切結果.length === 0 ? (
                   <></>
                 ) : 反切結果.length === 1 ? (
-                  <>{反切結果[0]}</>
+                  <span className="whitespace-pre-line">{反切結果[0]}</span>
                 ) : (
                   <>
                     <span className="text-4xl align-middle pr-1">{'{'}</span>
                     <div className="flex flex-col ml-2 text-lg text-left">
                       {反切結果.map((result, index) => (
-                        <span key={index}>{result}</span>
+                        <span key={index} className="whitespace-pre-line">
+                          {result}
+                        </span>
                       ))}
                     </div>
                   </>
@@ -282,16 +325,23 @@ const FanqieCalculator: React.FC = () => {
           {/* 現代音選擇 */}
           <div className="flex flex-wrap items-center justify-left space-x-2">
             <div>現代音選擇</div>
-            {[推導普通話, 推導廣州話, 推導上海話].map((fn, index) => (
+            {現代音方案們.map(方案 => (
               <input
                 type="button"
-                key={index}
-                value={fnNameMap.get(fn)}
-                onClick={() => set推導現代音(() => fn)}
-                className={`px-2 py-1 rounded-lg ${推導現代音 === fn ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
+                key={方案.名稱}
+                value={方案.名稱}
+                onClick={() => set當前現代音方案(方案)}
+                className={`px-2 py-1 rounded-lg ${當前現代音方案 === 方案 ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
               />
             ))}
           </div>
+
+          <DeriverOptions
+            方案名稱={當前現代音方案.名稱}
+            設定={當前方案設定}
+            onChange={handle推導選項Change}
+            onReset={reset當前推導選項}
+          />
         </div>
 
         {/* 反切過程顯示 */}
