@@ -3,8 +3,14 @@ import assert from 'node:assert/strict';
 import TshetUinh, { defaultLogger } from 'tshet-uinh';
 import { 推導設定 } from 'tshet-uinh-deriver-tools';
 import type { 推導方案 } from 'tshet-uinh-deriver-tools';
-import { gwongzau as examples廣州話, putonghua as examples普通話, zaonhe as examples上海話 } from 'tshet-uinh-examples';
+import {
+  gwongzau as examples廣州話,
+  putonghua as examples普通話,
+  taibu as examples大埔話,
+  zaonhe as examples上海話,
+} from 'tshet-uinh-examples';
 
+import { 推導大埔話, 大埔話選項列表 } from '../src/lib/推導大埔話';
 import { 推導上海話, 上海話選項列表 } from '../src/lib/推導上海話';
 import { 推導廣州話, 廣州話選項列表 } from '../src/lib/推導廣州話';
 import { 推導普通話, 普通話選項列表 } from '../src/lib/推導普通話';
@@ -15,6 +21,7 @@ type 字串推導方案 = 推導方案<string>;
 interface 本地方案 {
   推導: (音韻地位: TshetUinh.音韻地位, 選項?: Readonly<選項>) => string;
   選項列表: readonly unknown[];
+  檢查解釋?: boolean;
 }
 type 方案測試項目 = readonly [名稱: string, 本地方案: 本地方案, examples方案: 字串推導方案];
 
@@ -22,6 +29,7 @@ const 方案們: readonly 方案測試項目[] = [
   ['普通話', { 推導: 推導普通話, 選項列表: 普通話選項列表 }, examples普通話],
   ['廣州話', { 推導: 推導廣州話, 選項列表: 廣州話選項列表 }, examples廣州話],
   ['上海話', { 推導: 推導上海話, 選項列表: 上海話選項列表 }, examples上海話],
+  ['大埔話', { 推導: 推導大埔話, 選項列表: 大埔話選項列表, 檢查解釋: false }, examples大埔話],
 ];
 
 const 所有音韻地位 = Array.from(TshetUinh.資料.iter音韻地位());
@@ -100,12 +108,14 @@ for (const [名稱, 本地方案, examples方案] of 方案們) {
       if (explanation.length > 0) hasExplanation = true;
       const expected = examples推導(音韻地位);
       // Convert the UI-friendly 文/白 labels back to the newline format used by tshet-uinh-examples.
-      const comparableActual = 名稱 === '上海話' ? actual.replace(/^(.*)\(文\) (.*)\(白\)$/, '$1\n$2') : actual;
+      const comparableActual = ['上海話', '大埔話'].includes(名稱)
+        ? actual.replace(/^(.*)\(文\) (.*)\(白\)$/, '$1\n$2')
+        : actual;
       assert.equal(comparableActual, expected, `${名稱}推導結果不一致；選項：${serialize(選項)}；音韻地位：${音韻地位.描述}`);
     }
   }
 
   defaultLogger.enable = false;
-  assert.ok(hasExplanation, `${名稱}未透過 defaultLogger 產生解釋`);
+  if (本地方案.檢查解釋 !== false) assert.ok(hasExplanation, `${名稱}未透過 defaultLogger 產生解釋`);
   console.log(`${名稱}：${optionCases.length} 組選項 × ${所有音韻地位.length} 個音韻地位，結果一致`);
 }
