@@ -9,7 +9,7 @@
  * @author 以成
  */
 
-import { 音韻地位 } from 'tshet-uinh';
+import { defaultLogger, 音韻地位 } from 'tshet-uinh';
 import { 推導設定 } from 'tshet-uinh-deriver-tools';
 
 export const 大埔話選項列表: readonly unknown[] = [
@@ -530,5 +530,6 @@ export const 推導大埔話 = (
     }
   }
 
+  defaultLogger.log(`大埔話推導過程暫缺，推導結果為 ${結果}`);
   return 結果!;
 };

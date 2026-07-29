@@ -21,7 +21,6 @@ type 字串推導方案 = 推導方案<string>;
 interface 本地方案 {
   推導: (音韻地位: TshetUinh.音韻地位, 選項?: Readonly<選項>) => string;
   選項列表: readonly unknown[];
-  檢查解釋?: boolean;
 }
 type 方案測試項目 = readonly [名稱: string, 本地方案: 本地方案, examples方案: 字串推導方案];
 
@@ -29,7 +28,7 @@ const 方案們: readonly 方案測試項目[] = [
   ['普通話', { 推導: 推導普通話, 選項列表: 普通話選項列表 }, examples普通話],
   ['廣州話', { 推導: 推導廣州話, 選項列表: 廣州話選項列表 }, examples廣州話],
   ['上海話', { 推導: 推導上海話, 選項列表: 上海話選項列表 }, examples上海話],
-  ['大埔話', { 推導: 推導大埔話, 選項列表: 大埔話選項列表, 檢查解釋: false }, examples大埔話],
+  ['大埔話', { 推導: 推導大埔話, 選項列表: 大埔話選項列表 }, examples大埔話],
 ];
 
 const 所有音韻地位 = Array.from(TshetUinh.資料.iter音韻地位());
@@ -116,6 +115,6 @@ for (const [名稱, 本地方案, examples方案] of 方案們) {
   }
 
   defaultLogger.enable = false;
-  if (本地方案.檢查解釋 !== false) assert.ok(hasExplanation, `${名稱}未透過 defaultLogger 產生解釋`);
+  assert.ok(hasExplanation, `${名稱}未透過 defaultLogger 產生解釋`);
   console.log(`${名稱}：${optionCases.length} 組選項 × ${所有音韻地位.length} 個音韻地位，結果一致`);
 }
